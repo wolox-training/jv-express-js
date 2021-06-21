@@ -45,6 +45,11 @@ const config = {
       packageVersion: process.env.PACKAGE_VERSION || 'X-Package-Version',
       nodeVersion: process.env.NODE_VERSION || 'X-Node-Version'
     }
+  },
+  external: {
+    gardenApi: {
+      url: process.env.QUOTE_GARDEN_URL
+    }
   }
 };
 
