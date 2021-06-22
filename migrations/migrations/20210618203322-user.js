@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      lastame: {
+      lastName: {
         type: Sequelize.STRING,
         allowNull: false
       },
@@ -27,13 +27,5 @@ module.exports = {
       }
     }),
 
-  down: queryInterface =>
-    /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.dropTable('users');
-    */
-    queryInterface.dropTable('users')
+  down: queryInterface => queryInterface.dropTable('users')
 };
