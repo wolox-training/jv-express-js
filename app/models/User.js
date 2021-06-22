@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
-    'User',
+    'users',
     {
       id: {
         type: DataTypes.UUID,
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
-      lastame: {
+      lastName: {
         type: DataTypes.STRING,
         allowNull: false
       },
