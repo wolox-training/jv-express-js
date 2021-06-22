@@ -1,6 +1,6 @@
 const axios = require('axios');
 const logger = require('../logger');
-const { serviceGardenError } = require('../errors');
+const { serviceError } = require('../errors');
 
 const config = require('../../config').external.gardenApi;
 
@@ -14,7 +14,7 @@ const getQuote = async () => {
     return quote;
   } catch (error) {
     logger.error(error);
-    throw serviceGardenError('Garden service cannot get a quote');
+    throw serviceError('Garden service cannot get a quote');
   }
 };
 
