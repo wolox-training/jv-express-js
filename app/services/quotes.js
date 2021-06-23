@@ -4,7 +4,7 @@ const { serviceError } = require('../errors');
 
 const config = require('../../config').external.gardenApi;
 
-const getQuote = async () => {
+exports.getQuote = async () => {
   try {
     const { data } = await axios.get(config.url);
     const quote = {
@@ -16,8 +16,4 @@ const getQuote = async () => {
     logger.error(error);
     throw serviceError('Garden service cannot get a quote');
   }
-};
-
-module.exports = {
-  getQuote
 };
