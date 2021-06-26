@@ -1,4 +1,3 @@
-const errors = require('../errors');
 const logger = require('../logger');
 const { encryptPassword } = require('../helpers/wcrypt');
 const { USER_CREATED } = require('../../config/constants');
@@ -9,18 +8,14 @@ const createUser = async (req, res, next) => {
     const { body: userData } = req;
     const passwordEncrypted = await encryptPassword(userData.password);
     if (passwordEncrypted) userData.password = passwordEncrypted;
-    await UserServices.createUser(userData);
-    return res.status(201).send({
+    const newUser = await UserServices.createUser(userData);
+    res.status(201).send({
       message: USER_CREATED,
-      data: { name: userData.name }
+      data: { name: newUser.name }
     });
   } catch (err) {
-    logger.info('Error creating user: ', err);
-    if (err.errors) {
-      const messages = err.errors.map(e => e.message);
-      return next(errors.unprocessableEntity(messages));
-    }
-    return next(errors.unprocessableEntity(err.message));
+    logger.error(err);
+    next(err);
   }
 };
 
