@@ -1,6 +1,6 @@
 const { healthCheck } = require('./controllers/healthCheck');
 const { validateRequest } = require('./middlewares/validatorRequest');
-const { createUserValidator } = require('../app/validators/users');
+const { createUserValidator } = require('./middlewares/schemas/users');
 const userController = require('./controllers/users');
 
 exports.init = app => {
