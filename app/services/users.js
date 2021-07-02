@@ -1,7 +1,7 @@
 const logger = require('../logger');
 const { databaseError } = require('../errors');
 const { User } = require('../models');
-const { CREATE_USER_ON_DB_ERROR } = require('../../config/constants');
+const { CREATE_USER_ON_DB_ERROR, GET_USER_BY_MAIL_ERROR } = require('../../config/constants');
 
 exports.createUser = user => {
   try {
@@ -9,5 +9,14 @@ exports.createUser = user => {
   } catch (error) {
     logger.error(error);
     throw databaseError(CREATE_USER_ON_DB_ERROR);
+  }
+};
+
+exports.getUserByEmail = mail => {
+  try {
+    return User.findOne({ where: { mail } });
+  } catch (error) {
+    logger.error(error);
+    throw databaseError(GET_USER_BY_MAIL_ERROR);
   }
 };

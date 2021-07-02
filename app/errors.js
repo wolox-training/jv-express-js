@@ -20,3 +20,6 @@ exports.badRequest = message => internalError(message, exports.BAD_REQUEST);
 
 exports.DUPLICATED_REGISTER_ERROR = 'duplicated_register_error';
 exports.duplicatedRegisterError = message => internalError(message, exports.DUPLICATED_REGISTER_ERROR);
+
+exports.UNAUTHORIZED = 'unauthorized';
+exports.unauthorized = message => internalError(message, exports.UNAUTHORIZED);
