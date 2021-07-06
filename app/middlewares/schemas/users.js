@@ -54,7 +54,7 @@ exports.createUserValidator = [
   })
 ];
 
-exports.signupUserValidator = [
+exports.signinUserValidator = [
   checkSchema({
     mail: {
       in: ['body'],

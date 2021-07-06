@@ -1,14 +1,9 @@
 const logger = require('../logger');
-const { unauthorized, serviceError } = require('../errors');
+const { unauthorized } = require('../errors');
 const { encryptPassword, comparePassword } = require('../helpers/wcrypt');
-const {
-  USER_CREATED,
-  BAD_CREDENTIALS,
-  SIGN_IN_SUCCESSFUL,
-  SIGN_IN_MESSAGE_ERROR
-} = require('../../config/constants');
+const { USER_CREATED, BAD_CREDENTIALS, SIGN_IN_SUCCESSFUL } = require('../../config/constants');
 const UserServices = require('../services/users');
-const { generateToken } = require('../services/sessions');
+const { generateToken } = require('../helpers/sessions');
 
 exports.createUser = async (req, res, next) => {
   try {
@@ -32,17 +27,15 @@ exports.signIn = async (req, res, next) => {
     const user = await UserServices.getUserByEmail(mail);
     if (!user) return next(unauthorized(BAD_CREDENTIALS));
     const validateData = await comparePassword(password, user.password);
-    if (validateData) {
-      const { id, name, lastName } = user;
-      const token = generateToken({ id, name, lastName, mail });
-      return res.status(200).send({
-        message: SIGN_IN_SUCCESSFUL,
-        data: { token }
-      });
-    }
-    return next(unauthorized(BAD_CREDENTIALS));
+    if (!validateData) return next(unauthorized(BAD_CREDENTIALS));
+    const { id, name, lastName } = user;
+    const token = generateToken({ id, name, lastName, mail });
+    return res.status(200).send({
+      message: SIGN_IN_SUCCESSFUL,
+      data: { token }
+    });
   } catch (error) {
     logger.error(error);
-    return next(serviceError(SIGN_IN_MESSAGE_ERROR));
+    return next(error);
   }
 };

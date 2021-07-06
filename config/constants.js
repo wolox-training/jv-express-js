@@ -1,5 +1,4 @@
 // Configuration bcrypt
-exports.NUM_SALT = 10;
 exports.HASH_MESSAGE_ERROR = 'Error hashing the password';
 exports.COMPARE_HASH_MESSAGE_ERROR = 'Error comparing the passwords';
 
@@ -22,6 +21,5 @@ exports.CREATE_USER_ON_DB_ERROR = 'User can not be created in database';
 exports.BAD_CREDENTIALS = 'Input credentials are not valid';
 exports.SIGN_IN_SUCCESSFUL = 'Sign in process was successful';
 exports.SIGN_IN_MESSAGE_ERROR = 'Was not posible sign in';
-// Configuration JWT
-exports.TIME_ZONE = 'America/Bogota';
-exports.JWT_EXPIRATION_TIME = 1;
+exports.JWT_CREATED_MESSAGE_ERROR = 'Error creating jwt';
+exports.JWT_DECODE_MESSAGE_ERROR = 'Error decoding jwt';

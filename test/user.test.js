@@ -6,7 +6,7 @@ const {
   invalidPassword,
   invalidEmailExpected,
   invalidPasswordExpected,
-  nonParameerRequired
+  nonParameterRequired
 } = require('./mocks/users');
 const { User } = require('../app/models/');
 const UserService = require('../app/services/users');
@@ -71,7 +71,7 @@ describe('Users', () => {
         .expect(400)
         .expect('Content-Type', /json/)
         .then(res => {
-          expect(res.body.message[0]).toEqual(nonParameerRequired(parameterName));
+          expect(res.body.message[0]).toEqual(nonParameterRequired(parameterName));
           done();
         })
         .catch(err => done(err));
