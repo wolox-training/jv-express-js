@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const logger = require('../logger');
 const { defaultError } = require('../errors');
 const { HASH_MESSAGE_ERROR, COMPARE_HASH_MESSAGE_ERROR } = require('../../config/constants');
-const { numSalt } = require('../../config').common.jwt;
+const { numSalt } = require('../../config').common.session;
 
 exports.encryptPassword = (value, salt = numSalt) => {
   try {

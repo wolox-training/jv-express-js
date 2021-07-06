@@ -41,11 +41,55 @@ const nonParameterRequired = parameterName => ({
   location: 'body'
 });
 
+const countMock = 10;
+const rowsMock = [
+  {
+    id: 1,
+    name: 'Jhon',
+    lastName: 'Velásquez',
+    mail: 'jhon.velasquez@wolox.co'
+  },
+  {
+    id: 2,
+    name: 'Test',
+    lastName: 'User',
+    mail: 'test2.user@wolox.co'
+  },
+  {
+    id: 3,
+    name: 'Test',
+    lastName: 'User',
+    mail: 'test3.user@wolox.co'
+  },
+  {
+    id: 4,
+    name: 'Test',
+    lastName: 'User',
+    mail: 'test4.user@wolox.co'
+  },
+  {
+    id: 5,
+    name: 'Test',
+    lastName: 'User',
+    mail: 'test5.user@wolox.co'
+  }
+];
+
+// eslint-disable-next-line no-unused-vars
+const getUsersListMock = pagination =>
+  Promise.resolve({
+    count: countMock,
+    rows: rowsMock
+  });
+
 module.exports = {
   inputUserExpected,
   outputUserExpected,
   invalidPassword,
   invalidEmailExpected,
   invalidPasswordExpected,
-  nonParameterRequired
+  nonParameterRequired,
+  getUsersListMock,
+  countMock,
+  rowsMock
 };

@@ -1,7 +1,8 @@
 const logger = require('../logger');
 const { databaseError } = require('../errors');
 const { User } = require('../models');
-const { CREATE_USER_ON_DB_ERROR, GET_USER_BY_MAIL_ERROR } = require('../../config/constants');
+const { CREATE_USER_ON_DB_ERROR, QUERYING_DATABASE_ERROR } = require('../../config/constants');
+const { PAGINATION_OFFSET, PAGINATION_LIMIT } = require('../../config').common.session;
 
 exports.createUser = user => {
   try {
@@ -17,6 +18,28 @@ exports.getUserByEmail = mail => {
     return User.findOne({ where: { mail } });
   } catch (error) {
     logger.error(error);
-    throw databaseError(GET_USER_BY_MAIL_ERROR);
+    throw databaseError(QUERYING_DATABASE_ERROR);
+  }
+};
+
+exports.getUserByPk = primaryKey => {
+  try {
+    return User.findByPk(primaryKey);
+  } catch (error) {
+    logger.error(error);
+    throw databaseError(QUERYING_DATABASE_ERROR);
+  }
+};
+
+exports.getAllUsers = ({ offset = PAGINATION_OFFSET, limit = PAGINATION_LIMIT }) => {
+  try {
+    return User.findAndCountAll({
+      offset,
+      limit,
+      attributes: ['id', 'name', 'lastName', 'mail']
+    });
+  } catch (error) {
+    logger.error(error);
+    throw databaseError(QUERYING_DATABASE_ERROR);
   }
 };
