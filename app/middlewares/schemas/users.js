@@ -53,3 +53,18 @@ exports.createUserValidator = [
     }
   })
 ];
+
+exports.signinUserValidator = [
+  checkSchema({
+    mail: {
+      in: ['body'],
+      exists: { errorMessage: validateMessage('mail', VALIDATE_EXISTS) },
+      isString: { errorMessage: validateMessage('mail', VALIDATE_IS_STRING) },
+      notEmpty: { errorMessage: validateMessage('mail', VALIDATE_NOT_EMPTY) },
+      matches: {
+        options: mailRegex,
+        errorMessage: validateMessage('mail', VALIDATE_MAIL_MATCHES)
+      }
+    }
+  })
+];

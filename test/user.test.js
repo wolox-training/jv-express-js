@@ -6,9 +6,12 @@ const {
   invalidPassword,
   invalidEmailExpected,
   invalidPasswordExpected,
-  nonParameerRequired
+  nonParameterRequired
 } = require('./mocks/users');
 const { User } = require('../app/models/');
+const UserService = require('../app/services/users');
+const { signinCredentials, getUserByEmailMock, getUserNullEmailMock } = require('./mocks/sessions');
+const { BAD_CREDENTIALS } = require('../config/constants');
 
 describe('Users', () => {
   beforeEach(() => {
@@ -68,7 +71,52 @@ describe('Users', () => {
         .expect(400)
         .expect('Content-Type', /json/)
         .then(res => {
-          expect(res.body.message[0]).toEqual(nonParameerRequired(parameterName));
+          expect(res.body.message[0]).toEqual(nonParameterRequired(parameterName));
+          done();
+        })
+        .catch(err => done(err));
+    });
+  });
+  describe('POST /users/sessions', () => {
+    test('Sign in return a token', async done => {
+      const getUserByEmailSpy = jest.spyOn(UserService, 'getUserByEmail');
+      getUserByEmailSpy.mockImplementation(getUserByEmailMock);
+      await request(app)
+        .post('/users/sessions')
+        .send(signinCredentials)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then(res => {
+          expect(res.body.data.token).toBeTruthy();
+          done();
+        })
+        .catch(err => done(err));
+    });
+    test('User sign in with non matched password', async done => {
+      const getUserByEmailSpy = jest.spyOn(UserService, 'getUserByEmail');
+      getUserByEmailSpy.mockImplementation(getUserByEmailMock);
+      signinCredentials.password = 'errorpassword';
+      await request(app)
+        .post('/users/sessions')
+        .send(signinCredentials)
+        .expect('Content-Type', /json/)
+        .expect(401)
+        .then(res => {
+          expect(res.body.message).toBe(BAD_CREDENTIALS);
+          done();
+        })
+        .catch(err => done(err));
+    });
+    test('Sign in when user doesn´t exist', async done => {
+      const getUserByEmailSpy = jest.spyOn(UserService, 'getUserByEmail');
+      getUserByEmailSpy.mockImplementation(getUserNullEmailMock);
+      await request(app)
+        .post('/users/sessions')
+        .send(signinCredentials)
+        .expect('Content-Type', /json/)
+        .expect(401)
+        .then(res => {
+          expect(res.body.message).toBe(BAD_CREDENTIALS);
           done();
         })
         .catch(err => done(err));

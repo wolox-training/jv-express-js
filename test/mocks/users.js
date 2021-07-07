@@ -35,7 +35,7 @@ const invalidPasswordExpected = {
   internal_code: BAD_REQUEST
 };
 
-const nonParameerRequired = parameterName => ({
+const nonParameterRequired = parameterName => ({
   msg: validateMessage(parameterName, VALIDATE_EXISTS),
   param: parameterName,
   location: 'body'
@@ -47,5 +47,5 @@ module.exports = {
   invalidPassword,
   invalidEmailExpected,
   invalidPasswordExpected,
-  nonParameerRequired
+  nonParameterRequired
 };
