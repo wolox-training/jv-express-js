@@ -13,6 +13,9 @@ exports.VALIDATE_IS_STRING = 'must be a string';
 exports.VALIDATE_MAIL_MATCHES = 'is not an email address allowed';
 exports.VALIDATE_PASSWORD_MATCHES = 'is not a password allowed';
 
+// Messages - Validate Get Users
+exports.VALIDATE_IS_INTEGER = 'must be an integer';
+
 // Messages - Database
 exports.USER_ALREADY_EXIST = 'User already exist in database';
 exports.CREATE_USER_ON_DB_ERROR = 'User can not be created in database';

@@ -1,4 +1,4 @@
-const { USER_CREATED, VALIDATE_PASSWORD_MATCHES } = require('../../config/constants');
+const { USER_CREATED, VALIDATE_PASSWORD_MATCHES, VALIDATE_IS_INTEGER } = require('../../config/constants');
 const { BAD_REQUEST, DUPLICATED_REGISTER_ERROR } = require('../../app/errors');
 const { validateMessage, VALIDATE_EXISTS, USER_ALREADY_EXIST } = require('../../config/constants');
 
@@ -82,6 +82,24 @@ const getUsersListMock = pagination =>
     rows: rowsMock
   });
 
+const getUsersBadQueryResponse = (offset, limit) => ({
+  message: [
+    {
+      value: limit,
+      msg: `'limit' ${VALIDATE_IS_INTEGER}`,
+      param: 'limit',
+      location: 'query'
+    },
+    {
+      value: offset,
+      msg: `'offset' ${VALIDATE_IS_INTEGER}`,
+      param: 'offset',
+      location: 'query'
+    }
+  ],
+  internal_code: 'bad_request'
+});
+
 module.exports = {
   inputUserExpected,
   outputUserExpected,
@@ -91,5 +109,6 @@ module.exports = {
   nonParameterRequired,
   getUsersListMock,
   countMock,
-  rowsMock
+  rowsMock,
+  getUsersBadQueryResponse
 };

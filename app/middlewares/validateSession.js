@@ -6,11 +6,13 @@ const { getUserByPk } = require('../services/users');
 
 exports.validateSession = async (req, res, next) => {
   try {
+    const bearerToken = req.headers.authorization;
+    if (!bearerToken) return next(unauthorized(NO_TOKEN_MESSAGE_ERROR));
     const token = req.headers.authorization.split(' ')[1];
     if (!token) return next(unauthorized(NO_TOKEN_MESSAGE_ERROR));
     const payload = await decodeToken(token);
     // eslint-disable-next-line require-atomic-updates
-    req.headers.user = payload;
+    req.user = payload;
     const user = await getUserByPk(payload.id);
     if (!user) return next(unauthorized(INVALID_TOKEN_MESSAGE_ERROR));
     return next();

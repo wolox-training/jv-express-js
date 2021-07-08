@@ -5,7 +5,8 @@ const {
   VALIDATE_IS_STRING,
   VALIDATE_NOT_EMPTY,
   VALIDATE_MAIL_MATCHES,
-  VALIDATE_PASSWORD_MATCHES
+  VALIDATE_PASSWORD_MATCHES,
+  VALIDATE_IS_INTEGER
 } = require('../../../config/constants');
 
 const mailRegex = /^[a-zA-Z0-9_.+-]+@wolox\.(mx|co|cl|com|com\.ar)$/;
@@ -65,6 +66,25 @@ exports.signinUserValidator = [
         options: mailRegex,
         errorMessage: validateMessage('mail', VALIDATE_MAIL_MATCHES)
       }
+    }
+  })
+];
+
+exports.getUsersValidator = [
+  checkSchema({
+    limit: {
+      in: ['params', 'query'],
+      optional: { options: { nullable: true } },
+      isInt: true,
+      toInt: true,
+      errorMessage: validateMessage('limit', VALIDATE_IS_INTEGER)
+    },
+    offset: {
+      in: ['params', 'query'],
+      optional: { options: { nullable: true } },
+      isInt: true,
+      toInt: true,
+      errorMessage: validateMessage('offset', VALIDATE_IS_INTEGER)
     }
   })
 ];
