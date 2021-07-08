@@ -1,8 +1,8 @@
 const jwt = require('jwt-simple');
 const { secret, expiresTime } = require('../../config').common.session;
 const logger = require('../logger');
-const { defaultError } = require('../errors');
-const { JWT_CREATED_MESSAGE_ERROR, JWT_DECODE_MESSAGE_ERROR } = require('../../config/constants');
+const { defaultError, unauthorized } = require('../errors');
+const { JWT_CREATED_MESSAGE_ERROR, INVALID_TOKEN_MESSAGE_ERROR } = require('../../config/constants');
 
 exports.generateToken = payload => {
   try {
@@ -28,6 +28,6 @@ exports.decodeToken = token => {
     return jwt.decode(token, secret);
   } catch (error) {
     logger.error(error);
-    throw defaultError(JWT_DECODE_MESSAGE_ERROR);
+    throw unauthorized(INVALID_TOKEN_MESSAGE_ERROR);
   }
 };

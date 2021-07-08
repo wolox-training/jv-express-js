@@ -1,7 +1,12 @@
 const logger = require('../logger');
 const { unauthorized } = require('../errors');
 const { encryptPassword, comparePassword } = require('../helpers/wcrypt');
-const { USER_CREATED, BAD_CREDENTIALS, SIGN_IN_SUCCESSFUL } = require('../../config/constants');
+const {
+  USER_CREATED,
+  BAD_CREDENTIALS,
+  SIGN_IN_SUCCESSFUL,
+  GET_USERS_SUCCESSFULLY
+} = require('../../config/constants');
 const UserServices = require('../services/users');
 const { generateToken } = require('../helpers/sessions');
 
@@ -37,5 +42,19 @@ exports.signIn = async (req, res, next) => {
   } catch (error) {
     logger.error(error);
     return next(error);
+  }
+};
+
+exports.getUsers = async (req, res, next) => {
+  try {
+    const { offset, limit } = await req.query;
+    const users = await UserServices.getAllUsers({ offset, limit });
+    res.status(200).send({
+      message: GET_USERS_SUCCESSFULLY,
+      data: { users }
+    });
+  } catch (error) {
+    logger.error(error);
+    next(error);
   }
 };

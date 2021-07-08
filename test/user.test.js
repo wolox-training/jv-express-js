@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 const request = require('supertest');
+const logger = require('../app/logger');
 const app = require('../app');
 const {
   inputUserExpected,
@@ -6,12 +8,18 @@ const {
   invalidPassword,
   invalidEmailExpected,
   invalidPasswordExpected,
-  nonParameterRequired
+  nonParameterRequired,
+  getUsersListMock,
+  countMock,
+  rowsMock,
+  getUsersBadQueryResponse
 } = require('./mocks/users');
 const { User } = require('../app/models/');
 const UserService = require('../app/services/users');
 const { signinCredentials, getUserByEmailMock, getUserNullEmailMock } = require('./mocks/sessions');
-const { BAD_CREDENTIALS } = require('../config/constants');
+const { BAD_CREDENTIALS, NO_TOKEN_MESSAGE_ERROR } = require('../config/constants');
+
+let testToken = null;
 
 describe('Users', () => {
   beforeEach(() => {
@@ -87,6 +95,7 @@ describe('Users', () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .then(res => {
+          testToken = res.body.data.token;
           expect(res.body.data.token).toBeTruthy();
           done();
         })
@@ -117,6 +126,64 @@ describe('Users', () => {
         .expect(401)
         .then(res => {
           expect(res.body.message).toBe(BAD_CREDENTIALS);
+          done();
+        })
+        .catch(err => done(err));
+    });
+  });
+  describe('GET /users', () => {
+    beforeEach(async () => {
+      try {
+        await request(app)
+          .post('/users')
+          .send(inputUserExpected);
+      } catch (error) {
+        logger.error(error.errors);
+      }
+    });
+
+    test('Paginated user list should be returned', async done => {
+      const getAllUsersSpy = jest.spyOn(UserService, 'getAllUsers');
+      getAllUsersSpy.mockImplementation(getUsersListMock);
+      await request(app)
+        .get('/users?offset=0&limit=5')
+        .set('Authorization', `Bearer ${testToken}`)
+        .set('Accept', 'application/json')
+        .expect(200)
+        .then(res => {
+          expect(res.body.data.users.count).toBe(countMock);
+          expect(res.body.data.users.rows).toEqual(rowsMock);
+          done();
+        })
+        .catch(err => done(err));
+    });
+
+    test('When is not token must be return unauthorized', async done => {
+      const getAllUsersSpy = jest.spyOn(UserService, 'getAllUsers');
+      getAllUsersSpy.mockImplementation(getUsersListMock);
+      await request(app)
+        .get('/users?offset=0&limit=5')
+        .set('Accept', 'application/json')
+        .expect(401)
+        .then(res => {
+          expect(res.body.message).toBe(NO_TOKEN_MESSAGE_ERROR);
+          done();
+        })
+        .catch(err => done(err));
+    });
+
+    test('When parameters are bad in the query', async done => {
+      const getAllUsersSpy = jest.spyOn(UserService, 'getAllUsers');
+      getAllUsersSpy.mockImplementation(getUsersListMock);
+      const limitValue = 'limit';
+      const offsetValue = 'offset';
+      await request(app)
+        .get(`/users?offset=${offsetValue}&limit=${limitValue}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .set('Accept', 'application/json')
+        .expect(400)
+        .then(res => {
+          expect(res.body).toEqual(getUsersBadQueryResponse(offsetValue, limitValue));
           done();
         })
         .catch(err => done(err));
