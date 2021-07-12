@@ -33,8 +33,8 @@ exports.signIn = async (req, res, next) => {
     if (!user) return next(unauthorized(BAD_CREDENTIALS));
     const validateData = await comparePassword(password, user.password);
     if (!validateData) return next(unauthorized(BAD_CREDENTIALS));
-    const { id, name, lastName } = user;
-    const token = generateToken({ id, name, lastName, mail });
+    const { id, name, lastName, role } = user;
+    const token = generateToken({ id, name, lastName, mail, role });
     return res.status(200).send({
       message: SIGN_IN_SUCCESSFUL,
       data: { token }

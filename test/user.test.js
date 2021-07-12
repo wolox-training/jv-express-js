@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const request = require('supertest');
 const logger = require('../app/logger');
 const app = require('../app');
@@ -95,7 +94,6 @@ describe('Users', () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .then(res => {
-          testToken = res.body.data.token;
           expect(res.body.data.token).toBeTruthy();
           done();
         })
@@ -104,10 +102,10 @@ describe('Users', () => {
     test('User sign in with non matched password', async done => {
       const getUserByEmailSpy = jest.spyOn(UserService, 'getUserByEmail');
       getUserByEmailSpy.mockImplementation(getUserByEmailMock);
-      signinCredentials.password = 'errorpassword';
+      const signinCredentialsError = { ...signinCredentials, password: 'errorpassword' };
       await request(app)
         .post('/users/sessions')
-        .send(signinCredentials)
+        .send(signinCredentialsError)
         .expect('Content-Type', /json/)
         .expect(401)
         .then(res => {
@@ -133,10 +131,18 @@ describe('Users', () => {
   });
   describe('GET /users', () => {
     beforeEach(async () => {
+      const getUserByEmailSpy = jest.spyOn(UserService, 'getUserByEmail');
+      getUserByEmailSpy.mockImplementation(getUserByEmailMock);
       try {
         await request(app)
           .post('/users')
           .send(inputUserExpected);
+        await request(app)
+          .post('/users/sessions')
+          .send(signinCredentials)
+          .then(res => {
+            testToken = res.body.data.token;
+          });
       } catch (error) {
         logger.error(error.errors);
       }

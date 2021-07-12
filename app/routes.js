@@ -7,7 +7,8 @@ const {
 } = require('./middlewares/schemas/users');
 const { validateUserByEmail } = require('./middlewares/database');
 const userController = require('./controllers/users');
-const { validateSession } = require('../app/middlewares/validateSession');
+const adminController = require('./controllers/admin');
+const { validateSession, validateIsAdmin } = require('../app/middlewares/validateSession');
 
 exports.init = app => {
   app.get('/health', healthCheck);
@@ -15,4 +16,10 @@ exports.init = app => {
   app.post('/users', [validateRequest(createUserValidator), validateUserByEmail], userController.createUser);
   app.post('/users/sessions', [validateRequest(signinUserValidator)], userController.signIn);
   app.get('/users', [validateRequest(getUsersValidator), validateSession], userController.getUsers);
+
+  app.post(
+    '/admin/users',
+    [validateRequest(createUserValidator), validateIsAdmin],
+    adminController.createOrUpdateAdminUser
+  );
 };
