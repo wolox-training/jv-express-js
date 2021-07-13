@@ -1,4 +1,9 @@
-const { USER_CREATED, VALIDATE_PASSWORD_MATCHES, VALIDATE_IS_INTEGER } = require('../../config/constants');
+const {
+  USER_CREATED,
+  USER_UPDATED,
+  VALIDATE_PASSWORD_MATCHES,
+  VALIDATE_IS_INTEGER
+} = require('../../config/constants');
 const { BAD_REQUEST, DUPLICATED_REGISTER_ERROR } = require('../../app/errors');
 const { validateMessage, VALIDATE_EXISTS, USER_ALREADY_EXIST } = require('../../config/constants');
 
@@ -11,6 +16,13 @@ const inputUserExpected = {
 
 const outputUserExpected = {
   message: USER_CREATED,
+  data: {
+    name: inputUserExpected.name
+  }
+};
+
+const outputUserUpdatedExpected = {
+  message: USER_UPDATED,
   data: {
     name: inputUserExpected.name
   }
@@ -103,6 +115,7 @@ const getUsersBadQueryResponse = (offset, limit) => ({
 module.exports = {
   inputUserExpected,
   outputUserExpected,
+  outputUserUpdatedExpected,
   invalidPassword,
   invalidEmailExpected,
   invalidPasswordExpected,
