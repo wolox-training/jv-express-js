@@ -19,7 +19,7 @@ exports.init = app => {
 
   app.post(
     '/admin/users',
-    [validateRequest(createUserValidator), validateIsAdmin],
+    [validateRequest(createUserValidator), validateSession, validateIsAdmin],
     adminController.createOrUpdateAdminUser
   );
 };
