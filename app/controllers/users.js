@@ -3,9 +3,11 @@ const { unauthorized } = require('../errors');
 const { encryptPassword, comparePassword } = require('../helpers/wcrypt');
 const {
   USER_CREATED,
+  USER_UPDATED,
   BAD_CREDENTIALS,
   SIGN_IN_SUCCESSFUL,
-  GET_USERS_SUCCESSFULLY
+  GET_USERS_SUCCESSFULLY,
+  ROLES
 } = require('../../config/constants');
 const UserServices = require('../services/users');
 const { generateToken } = require('../helpers/sessions');
@@ -74,5 +76,33 @@ exports.getUsers = async (req, res, next) => {
   } catch (error) {
     logger.error(error);
     next(error);
+  }
+};
+
+exports.createOrUpdateAdminUser = async (req, res, next) => {
+  try {
+    const { body: adminUser } = req;
+    logger.info(
+      `Create/Update admin user start: 
+      method: ${req.method},
+      endpointt: ${req.path},
+      user: ${adminUser}`
+    );
+    adminUser.role = ROLES.ADMIN;
+    adminUser.password = await encryptPassword(adminUser.password);
+    const [user, created] = await UserServices.createAdmin(adminUser);
+    if (!created) {
+      return res.status(200).send({
+        message: USER_UPDATED,
+        data: { name: user.name }
+      });
+    }
+    return res.status(201).send({
+      message: USER_CREATED,
+      data: { name: user.name }
+    });
+  } catch (err) {
+    logger.error(err);
+    return next(err);
   }
 };

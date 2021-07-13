@@ -36,8 +36,17 @@ exports.getAllUsers = ({ offset = PAGINATION_OFFSET, limit = PAGINATION_LIMIT })
     return User.findAndCountAll({
       offset,
       limit,
-      attributes: ['id', 'name', 'lastName', 'mail']
+      attributes: ['id', 'name', 'lastName', 'mail', 'role']
     });
+  } catch (error) {
+    logger.error(error);
+    throw databaseError(QUERYING_DATABASE_ERROR);
+  }
+};
+
+exports.createAdmin = userAdmin => {
+  try {
+    return User.upsert(userAdmin, { returning: true });
   } catch (error) {
     logger.error(error);
     throw databaseError(QUERYING_DATABASE_ERROR);

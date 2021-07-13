@@ -7,7 +7,6 @@ const {
 } = require('./middlewares/schemas/users');
 const { validateUserByEmail } = require('./middlewares/database');
 const userController = require('./controllers/users');
-const adminController = require('./controllers/admin');
 const { validateSession, validateIsAdmin } = require('../app/middlewares/validateSession');
 
 exports.init = app => {
@@ -20,6 +19,6 @@ exports.init = app => {
   app.post(
     '/admin/users',
     [validateRequest(createUserValidator), validateSession, validateIsAdmin],
-    adminController.createOrUpdateAdminUser
+    userController.createOrUpdateAdminUser
   );
 };
