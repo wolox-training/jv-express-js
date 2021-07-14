@@ -6,11 +6,11 @@ exports.createWeetInput = {
   author: 'George Eliot'
 };
 
-exports.createWeetOutput = {
+const createWeetOutput = {
   message: WEET_CREATED,
   data: {
-    quote: this.createWeetInput.quote,
-    author: this.createWeetInput.author
+    quote: 'In every parting there is an image of death.',
+    author: 'George Eliot'
   }
 };
 
@@ -21,7 +21,25 @@ exports.createWeetLargeInput = {
   author: 'George Eliot'
 };
 
+const weetMock = () =>
+  Promise.resolve({
+    quote: 'In every parting there is an image of death.',
+    author: 'George Eliot'
+  });
+
+exports.weetMockLarge = {
+  quote: `In every parting there is an image of death.
+          In every parting there is an image of death.
+          In every parting there is an image of death.`,
+  author: 'George Eliot'
+};
+
 exports.createWeetLargeOutput = {
   message: MAX_LENGTH_MESSAGE_ERROR,
   internal_code: TOO_LARGE
+};
+
+module.exports = {
+  weetMock,
+  createWeetOutput
 };

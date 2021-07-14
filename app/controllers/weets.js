@@ -7,7 +7,8 @@ const { payloadTooLarge } = require('../errors');
 
 exports.createWeet = async (req, res, next) => {
   try {
-    const { quote, author } = typeof req.body.quote === 'undefined' ? await getQuote() : req.body;
+    // const { quote, author } = typeof req.body.quote === 'undefined' ? await getQuote() : req.body;
+    const { quote, author } = await getQuote();
     const userId = req.user.id;
     const weet = { userId, author, quote };
     logger.info(

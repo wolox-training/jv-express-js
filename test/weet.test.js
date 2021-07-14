@@ -2,16 +2,19 @@
 const request = require('supertest');
 const app = require('../app');
 const db = require('../app/models/index');
+const quotes = require('../app/services/quotes');
 const { regularUser, signinRegularCredentials } = require('./mocks/admin');
 const {
-  createWeetInput,
   createWeetOutput,
   createWeetLargeInput,
-  createWeetLargeOutput
+  createWeetLargeOutput,
+  weetMock,
+  weetMockLarge
 } = require('./mocks/weets');
 
-describe('Weets', () => {
-  let regularToken = null;
+let regularToken = null;
+
+describe.only('Weets', () => {
   beforeEach(async done => {
     jest.resetModules();
     await db.User.create(regularUser);
@@ -26,22 +29,30 @@ describe('Weets', () => {
       .catch(err => done(err));
   });
 
-  test('Weet should be created', async done => {
-    await request(app)
-      .post('/weets')
-      .send(createWeetInput)
-      .set('Authorization', `Bearer ${regularToken}`)
-      .expect(201)
-      .then(res => {
-        expect(res.body).toEqual(createWeetOutput);
-        done();
-      })
-      .catch(err => done(err));
+  describe('Create', () => {
+    test('Weet should be created', async done => {
+      const fnSpy = jest.spyOn(quotes, 'getQuote');
+      fnSpy.mockImplementation(weetMock);
+      await request(app)
+        .post('/weets')
+        .set('Authorization', `Bearer ${regularToken}`)
+        .expect(201)
+        .then(res => {
+          expect(res.body).toEqual(createWeetOutput);
+          done();
+        })
+        .catch(err => done(err));
+    });
   });
-  test('Weet shouldn`t be created', async done => {
+
+  test.skip('Weet shouldn`t be created', async done => {
+    beforeAll(() => {
+      const fnSpy = jest.spyOn(quotes, 'getQuote');
+      fnSpy.mockClear();
+      fnSpy.mockImplementation(weetMockLarge);
+    });
     await request(app)
       .post('/weets')
-      .send(createWeetLargeInput)
       .set('Authorization', `Bearer ${regularToken}`)
       .expect(413)
       .then(res => {
