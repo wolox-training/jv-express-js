@@ -7,6 +7,7 @@ const statusCodes = {
   [errors.DATABASE_ERROR]: 503,
   [errors.DEFAULT_ERROR]: 500,
   [errors.SERVICE_ERROR]: 503,
+  [errors.TOO_LARGE]: 413,
   [errors.DUPLICATED_REGISTER_ERROR]: 409,
   [errors.UNAUTHORIZED]: 401,
   [errors.BAD_REQUEST]: 400

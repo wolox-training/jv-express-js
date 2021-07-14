@@ -23,3 +23,6 @@ exports.duplicatedRegisterError = message => internalError(message, exports.DUPL
 
 exports.UNAUTHORIZED = 'unauthorized';
 exports.unauthorized = message => internalError(message, exports.UNAUTHORIZED);
+
+exports.TOO_LARGE = 'payload_too_large';
+exports.payloadTooLarge = message => internalError(message, exports.TOO_LARGE);

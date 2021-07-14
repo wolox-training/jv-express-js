@@ -9,7 +9,7 @@ exports.getQuote = async () => {
     const { data } = await axios.get(config.url);
     const quote = {
       author: data.data[0].quoteAuthor,
-      text: data.data[0].quoteText
+      quote: data.data[0].quoteText
     };
     return quote;
   } catch (error) {
