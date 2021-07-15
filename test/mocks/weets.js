@@ -1,11 +1,24 @@
-const { TOO_LARGE } = require('../../app/errors');
-const { WEET_CREATED, MAX_LENGTH_MESSAGE_ERROR } = require('../../config/constants');
+const { WEET_CREATED } = require('../../config/constants');
+const { maxLength } = require('../../config').common.weet;
 
 exports.createWeetInput = {
   data: {
     data: [
       {
         quoteText: 'In every parting there is an image of death.',
+        quoteAuthor: 'George Eliot'
+      }
+    ]
+  }
+};
+
+exports.createLongWeetInput = {
+  data: {
+    data: [
+      {
+        quoteText: `In every parting there is an image of death.
+        In every parting there is an image of death.
+        In every parting there is an image of death.`,
         quoteAuthor: 'George Eliot'
       }
     ]
@@ -20,21 +33,23 @@ exports.createWeetOutput = {
   }
 };
 
-exports.createWeetLargeInput = {
-  quote: `In every parting there is an image of death.
-          In every parting there is an image of death.
-          In every parting there is an image of death.`,
-  author: 'George Eliot'
+exports.createLongWeetOutput = {
+  message: WEET_CREATED,
+  data: {
+    quote: this.createLongWeetInput.data.data[0].quoteText.substring(0, maxLength),
+    author: this.createLongWeetInput.data.data[0].quoteAuthor
+  }
 };
 
-exports.weetMockLarge = {
-  quote: `In every parting there is an image of death.
-          In every parting there is an image of death.
-          In every parting there is an image of death.`,
-  author: 'George Eliot'
+exports.regularUser = {
+  name: 'Jhon',
+  lastName: 'Velasquez',
+  password: 'abcd1234',
+  mail: 'weet.velasquez@wolox.co',
+  role: 'regular'
 };
 
-exports.createWeetLargeOutput = {
-  message: MAX_LENGTH_MESSAGE_ERROR,
-  internal_code: TOO_LARGE
+exports.signinRegularCredentials = {
+  mail: 'weet.velasquez@wolox.co',
+  password: 'abcd1234'
 };

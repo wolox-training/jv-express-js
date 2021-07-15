@@ -6,13 +6,13 @@ const { adminUser, regularUser, signinRegularCredentials, signinAdminCredentials
 const { getBadResponsePrivileges } = require('./mocks/admin');
 const { inputUserExpected, outputUserExpected, outputUserUpdatedExpected } = require('./mocks/users');
 
-describe.skip('Admin', () => {
+describe('Admin', () => {
+  let adminToken = null;
+  let regularToken = null;
   describe('POST /admin/users', () => {
-    let regularToken = null;
-    let adminToken = null;
     beforeEach(async done => {
-      await db.User.create(regularUser);
       await db.User.create(adminUser);
+      await db.User.create(regularUser);
 
       await request(app)
         .post('/users/sessions')

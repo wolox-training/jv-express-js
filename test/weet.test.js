@@ -2,12 +2,12 @@
 const request = require('supertest');
 const axios = require('axios');
 const app = require('../app');
-const { regularUser, signinRegularCredentials } = require('./mocks/admin');
+const { regularUser, signinRegularCredentials } = require('./mocks/weets');
 const {
   createWeetInput,
   createWeetOutput,
-  createWeetLargeInput,
-  createWeetLargeOutput
+  createLongWeetInput,
+  createLongWeetOutput
 } = require('./mocks/weets');
 
 jest.mock('axios');
@@ -16,6 +16,7 @@ describe.only('Weets', () => {
   let signedInUser;
   let regularToken;
   let response = {};
+  let responseLong = {};
   beforeAll(async () => {
     await request(app)
       .post('/users')
@@ -27,10 +28,14 @@ describe.only('Weets', () => {
     regularToken = signedInUser.body.data.token;
   });
 
-  describe.only('Weet should be created', () => {
+  describe('Weet should be created', () => {
     beforeAll(async () => {
       axios.get.mockImplementationOnce(() => Promise.resolve(createWeetInput));
       response = await request(app)
+        .post('/weets')
+        .set('Authorization', `Bearer ${regularToken}`);
+      axios.get.mockImplementationOnce(() => Promise.resolve(createLongWeetInput));
+      responseLong = await request(app)
         .post('/weets')
         .set('Authorization', `Bearer ${regularToken}`);
     });
@@ -45,19 +50,17 @@ describe.only('Weets', () => {
     });
 
     test('mock should be called', () => {
-      expect(axios.get).toBeCalledTimes(1);
+      expect(axios.get).toBeCalledTimes(2);
     });
-  });
 
-  test.skip('Weet shouldn`t be created', async done => {
-    await request(app)
-      .post('/weets')
-      .set('Authorization', `Bearer ${regularToken}`)
-      .expect(413)
-      .then(res => {
-        expect(res.body).toEqual(createWeetLargeOutput);
-        done();
-      })
-      .catch(err => done(err));
+    describe('Weet long than 140 should be trim and created', () => {
+      test('should match status code 201', () => {
+        // console.log(response);
+        expect(responseLong.status).toBe(201);
+      });
+      test('should return the list banks', () => {
+        expect(responseLong.body).toEqual(createLongWeetOutput);
+      });
+    });
   });
 });

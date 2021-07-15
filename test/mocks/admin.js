@@ -17,7 +17,7 @@ exports.adminUser = {
 exports.regularUser = {
   name: 'Jhon',
   lastName: 'Velasquez',
-  password: 'abcd1234',
+  password: '$2a$10$xACyWYbW8uJxydccdoKYq.Iq5O7yHaOoPPlq4oPNMQT304QWqbBhy',
   mail: 'regular.velasquez@wolox.co',
   role: 'regular'
 };
