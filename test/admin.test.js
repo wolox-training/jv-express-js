@@ -6,7 +6,7 @@ const { adminUser, regularUser, signinRegularCredentials, signinAdminCredentials
 const { getBadResponsePrivileges } = require('./mocks/admin');
 const { inputUserExpected, outputUserExpected, outputUserUpdatedExpected } = require('./mocks/users');
 
-describe('Admin', () => {
+describe.skip('Admin', () => {
   describe('POST /admin/users', () => {
     let regularToken = null;
     let adminToken = null;

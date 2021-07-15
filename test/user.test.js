@@ -20,7 +20,7 @@ const { BAD_CREDENTIALS, NO_TOKEN_MESSAGE_ERROR } = require('../config/constants
 
 let testToken = null;
 
-describe('Users', () => {
+describe.skip('Users', () => {
   beforeEach(() => {
     jest.resetModules();
   });
