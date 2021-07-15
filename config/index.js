@@ -50,7 +50,9 @@ const config = {
       nodeVersion: process.env.NODE_VERSION || 'X-Node-Version'
     },
     weet: {
-      maxLength: process.env.MAX_LENGTH_WEET || 140
+      maxLength: process.env.MAX_LENGTH_WEET || 140,
+      page: process.env.WEET_PAGINATION_OFFSET || 0,
+      limit: process.env.WEET_PAGINATION_LIMIT || 10
     }
   },
   external: {

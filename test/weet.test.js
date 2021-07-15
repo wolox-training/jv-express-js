@@ -7,16 +7,22 @@ const {
   createWeetInput,
   createWeetOutput,
   createLongWeetInput,
-  createLongWeetOutput
+  createLongWeetOutput,
+  getWeetsListMock,
+  badResponseExpectedWeet
 } = require('./mocks/weets');
+const WeetService = require('../app/services/weets');
 
 jest.mock('axios');
-describe.only('Weets', () => {
+describe('Weets', () => {
   /* eslint-disable init-declarations */
   let signedInUser;
   let regularToken;
   let response = {};
   let responseLong = {};
+  let responseWeetList = {};
+  let badResponseWeetList = {};
+
   beforeAll(async () => {
     await request(app)
       .post('/users')
@@ -34,9 +40,20 @@ describe.only('Weets', () => {
       response = await request(app)
         .post('/weets')
         .set('Authorization', `Bearer ${regularToken}`);
+
       axios.get.mockImplementationOnce(() => Promise.resolve(createLongWeetInput));
       responseLong = await request(app)
         .post('/weets')
+        .set('Authorization', `Bearer ${regularToken}`);
+
+      const getWeetsSpy = jest.spyOn(WeetService, 'getWeets');
+      getWeetsSpy.mockImplementation(getWeetsListMock);
+      responseWeetList = await request(app)
+        .get('/weets?page=0&limit=5')
+        .set('Authorization', `Bearer ${regularToken}`);
+
+      badResponseWeetList = await request(app)
+        .get('/weets?page=string&limit=5')
         .set('Authorization', `Bearer ${regularToken}`);
     });
     afterAll(() => jest.clearAllMocks());
@@ -60,6 +77,20 @@ describe.only('Weets', () => {
       });
       test('should return the list banks', () => {
         expect(responseLong.body).toEqual(createLongWeetOutput);
+      });
+    });
+    describe('Get pagination weets should be return', () => {
+      test('Paginate should match status code 200', () => {
+        expect(responseWeetList.status).toBe(200);
+      });
+      test('Should return the list banks', () => {
+        expect(responseWeetList.body.data.weets.count).toEqual(5);
+      });
+      test('Should return and error on request', () => {
+        expect(badResponseWeetList.status).toBe(400);
+      });
+      test('Should return and error on request', () => {
+        expect(badResponseWeetList.body).toEqual(badResponseExpectedWeet);
       });
     });
   });

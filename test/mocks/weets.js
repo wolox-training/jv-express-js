@@ -53,3 +53,60 @@ exports.signinRegularCredentials = {
   mail: 'weet.velasquez@wolox.co',
   password: 'abcd1234'
 };
+
+const countMock = 5;
+const rowsMock = [
+  {
+    id: 1,
+    quote:
+      'I have discovered the art of deceiving diplomats. I tell them the truth and they never believe me',
+    author: 'Camillo di Cavour',
+    userId: 1
+  },
+  {
+    id: 2,
+    quote:
+      'I have discovered the art of deceiving diplomats. I tell them the truth and they never believe me',
+    author: 'Camillo di Cavour',
+    userId: 1
+  },
+  {
+    id: 3,
+    quote:
+      'I have discovered the art of deceiving diplomats. I tell them the truth and they never believe me',
+    author: 'Camillo di Cavour',
+    userId: 1
+  },
+  {
+    id: 4,
+    quote:
+      'I have discovered the art of deceiving diplomats. I tell them the truth and they never believe me',
+    author: 'Camillo di Cavour',
+    userId: 1
+  },
+  {
+    id: 5,
+    quote:
+      'I have discovered the art of deceiving diplomats. I tell them the truth and they never believe me',
+    author: 'Camillo di Cavour',
+    userId: 1
+  }
+];
+
+exports.getWeetsListMock = () =>
+  Promise.resolve({
+    count: countMock,
+    rows: rowsMock
+  });
+
+exports.badResponseExpectedWeet = {
+  message: [
+    {
+      value: 'string',
+      msg: "'page' must be an integer",
+      param: 'page',
+      location: 'query'
+    }
+  ],
+  internal_code: 'bad_request'
+};

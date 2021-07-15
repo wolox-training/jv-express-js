@@ -9,6 +9,7 @@ const { validateUserByEmail } = require('./middlewares/database');
 const userController = require('./controllers/users');
 const { validateSession, validateIsAdmin } = require('../app/middlewares/validateSession');
 const weetController = require('./controllers/weets');
+const { getWeetsValidator } = require('./middlewares/schemas/weets');
 
 exports.init = app => {
   app.get('/health', healthCheck);
@@ -24,4 +25,5 @@ exports.init = app => {
   );
 
   app.post('/weets', validateSession, weetController.createWeet);
+  app.get('/weets', [validateRequest(getWeetsValidator), validateSession], weetController.getWeets);
 };
