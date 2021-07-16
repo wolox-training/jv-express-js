@@ -6,16 +6,14 @@ const { maxLength } = require('../../config').common.weet;
 
 exports.createWeet = async (req, res, next) => {
   try {
-    const { quote, author } = await getQuote();
-    const userId = req.user.id;
-    const weet = { userId, author, quote: quote.substring(0, maxLength) };
     logger.info(
       `Create Weet start: 
       method: ${req.method},
-      endpointt: ${req.path}
-      weet: ${JSON.stringify(weet)}`
+      endpointt: ${req.path}`
     );
-    // if (!(quote.length <= maxLength)) return next(payloadTooLarge(MAX_LENGTH_MESSAGE_ERROR));
+    const { quote, author } = await getQuote();
+    const userId = req.user.id;
+    const weet = { userId, author, quote: quote.substring(0, maxLength) };
     await WeetServices.createWeet(weet);
     return res.status(201).send({
       message: WEET_CREATED,

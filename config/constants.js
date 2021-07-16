@@ -1,4 +1,3 @@
-const { maxLength } = require('../config').common.weet;
 // Configuration bcrypt
 exports.HASH_MESSAGE_ERROR = 'Error hashing the password';
 exports.COMPARE_HASH_MESSAGE_ERROR = 'Error comparing the passwords';
@@ -40,4 +39,3 @@ exports.JWT_DECODE_MESSAGE_ERROR = 'Error trying to decode JWT';
 // Messages - Weets
 exports.WEET_FOUND = 'Weet was got succesfully';
 exports.WEET_CREATED = 'Weet created successfully';
-exports.MAX_LENGTH_MESSAGE_ERROR = `Weet is too long than: ${maxLength}`;

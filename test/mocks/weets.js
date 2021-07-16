@@ -110,3 +110,8 @@ exports.badResponseExpectedWeet = {
   ],
   internal_code: 'bad_request'
 };
+
+exports.serviceResponseError = {
+  message: 'Garden service cannot get a quote',
+  internal_code: 'service_error'
+};

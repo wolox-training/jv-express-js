@@ -9,7 +9,8 @@ const {
   createLongWeetInput,
   createLongWeetOutput,
   getWeetsListMock,
-  badResponseExpectedWeet
+  badResponseExpectedWeet,
+  serviceResponseError
 } = require('./mocks/weets');
 const WeetService = require('../app/services/weets');
 
@@ -55,6 +56,23 @@ describe('Weets', () => {
       expect(axios.get).toBeCalledTimes(1);
     });
   });
+  describe('Weet service fails on request', () => {
+    beforeEach(async () => {
+      axios.get.mockImplementationOnce(() => Promise.reject(new Error('fail')));
+      response = await request(app)
+        .post('/weets')
+        .set('Authorization', `Bearer ${regularToken}`);
+    });
+    afterEach(() => jest.clearAllMocks());
+    test('should match status code 503', () => {
+      // console.log(response);
+      expect(response.status).toBe(503);
+    });
+
+    test('should return an detailed error message', () => {
+      expect(response.body).toEqual(serviceResponseError);
+    });
+  });
   describe('Weet long than 140 should be trim and created', () => {
     beforeEach(async () => {
       axios.get.mockImplementationOnce(() => Promise.resolve(createLongWeetInput));
@@ -63,11 +81,10 @@ describe('Weets', () => {
         .set('Authorization', `Bearer ${regularToken}`);
     });
     afterEach(() => jest.clearAllMocks());
-    test('should match status code 201', () => {
-      // console.log(response);
+    test('Should match status code 201', () => {
       expect(responseLong.status).toBe(201);
     });
-    test('should return the list banks', () => {
+    test('Should trim weet to 140 charactes', () => {
       expect(responseLong.body).toEqual(createLongWeetOutput);
     });
   });
@@ -86,13 +103,13 @@ describe('Weets', () => {
     test('Paginate should match status code 200', () => {
       expect(responseWeetList.status).toBe(200);
     });
-    test('Should return the list banks', () => {
+    test('Should get paginated with 5  weets', () => {
       expect(responseWeetList.body.data.weets.count).toEqual(5);
     });
-    test('Should return and error on request', () => {
+    test('Should return a bad request', () => {
       expect(badResponseWeetList.status).toBe(400);
     });
-    test('Should return and error on request', () => {
+    test('Should return detailed message', () => {
       expect(badResponseWeetList.body).toEqual(badResponseExpectedWeet);
     });
   });
