@@ -35,3 +35,7 @@ exports.NO_TOKEN_MESSAGE_ERROR = 'There isn´t a token in the request';
 exports.INVALID_TOKEN_MESSAGE_ERROR = 'Unauthorized for this session';
 exports.GET_USERS_SUCCESSFULLY = 'Users were obtained successfully';
 exports.JWT_DECODE_MESSAGE_ERROR = 'Error trying to decode JWT';
+
+// Messages - Weets
+exports.WEET_FOUND = 'Weet was got succesfully';
+exports.WEET_CREATED = 'Weet created successfully';
