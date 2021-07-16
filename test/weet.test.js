@@ -23,7 +23,7 @@ describe('Weets', () => {
   let responseWeetList = {};
   let badResponseWeetList = {};
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     await request(app)
       .post('/users')
       .send(regularUser);
@@ -35,28 +35,13 @@ describe('Weets', () => {
   });
 
   describe('Weet should be created', () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
       axios.get.mockImplementationOnce(() => Promise.resolve(createWeetInput));
       response = await request(app)
         .post('/weets')
         .set('Authorization', `Bearer ${regularToken}`);
-
-      axios.get.mockImplementationOnce(() => Promise.resolve(createLongWeetInput));
-      responseLong = await request(app)
-        .post('/weets')
-        .set('Authorization', `Bearer ${regularToken}`);
-
-      const getWeetsSpy = jest.spyOn(WeetService, 'getWeets');
-      getWeetsSpy.mockImplementation(getWeetsListMock);
-      responseWeetList = await request(app)
-        .get('/weets?page=0&limit=5')
-        .set('Authorization', `Bearer ${regularToken}`);
-
-      badResponseWeetList = await request(app)
-        .get('/weets?page=string&limit=5')
-        .set('Authorization', `Bearer ${regularToken}`);
     });
-    afterAll(() => jest.clearAllMocks());
+    afterEach(() => jest.clearAllMocks());
     test('should match status code 201', () => {
       // console.log(response);
       expect(response.status).toBe(201);
@@ -67,31 +52,48 @@ describe('Weets', () => {
     });
 
     test('mock should be called', () => {
-      expect(axios.get).toBeCalledTimes(2);
+      expect(axios.get).toBeCalledTimes(1);
     });
-
-    describe('Weet long than 140 should be trim and created', () => {
-      test('should match status code 201', () => {
-        // console.log(response);
-        expect(responseLong.status).toBe(201);
-      });
-      test('should return the list banks', () => {
-        expect(responseLong.body).toEqual(createLongWeetOutput);
-      });
+  });
+  describe('Weet long than 140 should be trim and created', () => {
+    beforeEach(async () => {
+      axios.get.mockImplementationOnce(() => Promise.resolve(createLongWeetInput));
+      responseLong = await request(app)
+        .post('/weets')
+        .set('Authorization', `Bearer ${regularToken}`);
     });
-    describe('Get pagination weets should be return', () => {
-      test('Paginate should match status code 200', () => {
-        expect(responseWeetList.status).toBe(200);
-      });
-      test('Should return the list banks', () => {
-        expect(responseWeetList.body.data.weets.count).toEqual(5);
-      });
-      test('Should return and error on request', () => {
-        expect(badResponseWeetList.status).toBe(400);
-      });
-      test('Should return and error on request', () => {
-        expect(badResponseWeetList.body).toEqual(badResponseExpectedWeet);
-      });
+    afterEach(() => jest.clearAllMocks());
+    test('should match status code 201', () => {
+      // console.log(response);
+      expect(responseLong.status).toBe(201);
+    });
+    test('should return the list banks', () => {
+      expect(responseLong.body).toEqual(createLongWeetOutput);
+    });
+  });
+  describe('Get pagination weets should be return', () => {
+    beforeEach(async () => {
+      const getWeetsSpy = jest.spyOn(WeetService, 'getWeets');
+      getWeetsSpy.mockImplementation(getWeetsListMock);
+      badResponseWeetList = await request(app)
+        .get('/weets?page=string&limit=5')
+        .set('Authorization', `Bearer ${regularToken}`);
+      responseWeetList = await request(app)
+        .get('/weets?page=0&limit=5')
+        .set('Authorization', `Bearer ${regularToken}`);
+    });
+    afterEach(() => jest.clearAllMocks());
+    test('Paginate should match status code 200', () => {
+      expect(responseWeetList.status).toBe(200);
+    });
+    test('Should return the list banks', () => {
+      expect(responseWeetList.body.data.weets.count).toEqual(5);
+    });
+    test('Should return and error on request', () => {
+      expect(badResponseWeetList.status).toBe(400);
+    });
+    test('Should return and error on request', () => {
+      expect(badResponseWeetList.body).toEqual(badResponseExpectedWeet);
     });
   });
 });
