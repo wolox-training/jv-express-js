@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const request = require('supertest');
 const axios = require('axios');
 const app = require('../app');
@@ -44,11 +43,10 @@ describe('Weets', () => {
     });
     afterEach(() => jest.clearAllMocks());
     test('should match status code 201', () => {
-      // console.log(response);
       expect(response.status).toBe(201);
     });
 
-    test('should return the list banks', () => {
+    test('should return the weet created', () => {
       expect(response.body).toEqual(createWeetOutput);
     });
 
@@ -65,7 +63,6 @@ describe('Weets', () => {
     });
     afterEach(() => jest.clearAllMocks());
     test('should match status code 503', () => {
-      // console.log(response);
       expect(response.status).toBe(503);
     });
 

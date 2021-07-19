@@ -36,7 +36,7 @@ exports.getAllUsers = ({ offset = PAGINATION_OFFSET, limit = PAGINATION_LIMIT })
     return User.findAndCountAll({
       offset,
       limit,
-      attributes: ['id', 'name', 'lastName', 'mail', 'role']
+      attributes: ['id', 'name', 'lastName', 'mail', 'role', 'position']
     });
   } catch (error) {
     logger.error(error);

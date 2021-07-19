@@ -5,6 +5,14 @@ exports.COMPARE_HASH_MESSAGE_ERROR = 'Error comparing the passwords';
 // Messages - Users states
 exports.USER_CREATED = 'User created successfully';
 exports.USER_UPDATED = 'User updated successfully';
+exports.USERS_POSITIONS = {
+  DEV: 'DEV',
+  LEAD: 'LEAD',
+  TL: 'TL',
+  EM: 'EM',
+  HEAD: 'HEAD',
+  CEO: 'CEO'
+};
 
 // Messages - Validate SignUp users
 exports.validateMessage = (keyName, msg) => `'${keyName}' ${msg}`;
@@ -27,6 +35,7 @@ exports.ROLES = {
   REGULAR: 'regular',
   ADMIN: 'admin'
 };
+
 exports.ADMIN_PRIVILEGES_MESSAGE_ERROR = 'You haven´t admin privileges';
 
 // Configuration - get Users
